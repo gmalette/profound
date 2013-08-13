@@ -1,5 +1,4 @@
 require "profound/version"
-require 'choice'
 require 'rmagick'
 
 module Profound
