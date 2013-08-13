@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "profound"
   spec.version       = Profound::VERSION
   spec.authors       = ["Guillaume Malette"]
-  spec.email         = ["guillaume.malette@jadedpixel.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.email         = ["gmalette@gmail.com"]
+  spec.description   = %q{Use this gem if, like me, you're bad at Photoshop and want to ceate wallpapers like those on "The Profound Programmer"}
+  spec.summary       = %q{Creates images like those found on "The Profound Programmer"}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,6 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "choice", "~> 0.1.6"
+
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec", "~> 2.14"
 end
