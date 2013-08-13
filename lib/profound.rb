@@ -1,4 +1,5 @@
-require "profound/version"
+require 'profound/version'
+require 'profound/filters/toy_camera'
 require 'rmagick'
 
 module Profound
@@ -17,6 +18,8 @@ module Profound
   end
 
   class Image
+    include Profound::Filters::ToyCamera
+
     def initialize(source, caption, options, destination)
       @source       = Magick::ImageList.new(source).first
       @target       = Magick::ImageList.new
@@ -29,11 +32,19 @@ module Profound
     def convert
       shadow
       text
+      filters
       save
     end
 
     def text
       @source = @source.composite(_text, Magick::CenterGravity, Magick::OverCompositeOp)
+    end
+
+    def filters
+      case @options[:filter]
+      when :toycamera
+        toy_camera
+      end
     end
 
     def shadow

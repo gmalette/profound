@@ -16,6 +16,10 @@ source, caption, destination = OptionParser.new do |opts|
     options[:theme] = theme.to_sym
   end
 
+  opts.on("--filter=FILTER", "toycamera") do |filter|
+    options[:filter] = filter.to_sym
+  end
+
 end.parse!
 
 unless ARGV.length == 3
