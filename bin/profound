@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+require './lib/profound'
+
+Choice.options do
+  banner 'Usage: profound [options] source "Caption or label" destination'
+  header ''
+  header 'Specific options:'
+
+  option :theme do
+    long    '--theme=THEME'
+    desc    'Theme to use (light, dark)'
+    cast    Symbol
+    valid   [:light, :dark]
+    default :light
+  end
+end
+
+unless ARGV.length == 3
+  puts Choice.help
+  exit(1)
+end
+
+Profound::Image.new(ARGV[0], ARGV[1], Choice.choices, ARGV[2]).convert
