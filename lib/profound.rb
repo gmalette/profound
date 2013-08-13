@@ -27,16 +27,26 @@ module Profound
     end
 
     def convert
-      shadow!
-      text!
-      save!
+      shadow
+      text
+      save
     end
 
-    def text!
-      @source = @source.composite(text, Magick::CenterGravity, Magick::OverCompositeOp)
+    def text
+      @source = @source.composite(_text, Magick::CenterGravity, Magick::OverCompositeOp)
     end
 
-    def text(stroke_width = 0)
+    def shadow
+      image = _text(40)
+      shadow = image.shadow(0, 0, 30).colorize(1, 1, 1, 0, @theme.inverse_color)
+      @source = @source.composite(shadow, Magick::CenterGravity, 20, 0, Magick::OverCompositeOp)
+    end
+
+    def save
+      @source.write(@destination)
+    end
+
+    def _text(stroke_width = 0)
       image = Magick::Image.new(@source.columns, 100) {
         self.background_color = 'none'
       }
@@ -53,16 +63,6 @@ module Profound
       }
 
       image
-    end
-
-    def shadow!
-      image = text(40)
-      shadow = image.shadow(0, 0, 30).colorize(1, 1, 1, 0, @theme.inverse_color)
-      @source = @source.composite(shadow, Magick::CenterGravity, 20, 0, Magick::OverCompositeOp)
-    end
-
-    def save!
-      @source.write(@destination)
     end
   end
 end
