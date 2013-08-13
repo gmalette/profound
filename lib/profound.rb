@@ -18,9 +18,7 @@ module Profound
 
   class Image
     def initialize(source, caption, options, destination)
-      @image_list   = Magick::ImageList.new(source)
-      @source       = @image_list.first
-      # @image_list = Magick::ImageList.new
+      @source       = Magick::ImageList.new(source).first
       @target       = Magick::ImageList.new
       @destination  = destination
       @caption      = caption
@@ -38,13 +36,13 @@ module Profound
       @source = @source.composite(text, Magick::CenterGravity, Magick::OverCompositeOp)
     end
 
-    def text(color = nil, stroke_width = 0)
+    def text(stroke_width = 0)
       image = Magick::Image.new(@source.columns, 100) {
         self.background_color = 'none'
       }
       text = Magick::Draw.new
 
-      color ||= @theme.color
+      color = @theme.color
       text.annotate(image, 0, 0, 0, 0, @caption) {
         self.fill         = color
         self.font_family  = 'Arial'
@@ -58,12 +56,12 @@ module Profound
     end
 
     def shadow!
-      image = text(@theme.inverse_color, 40)
-      @source = @source.composite(image.shadow(0, 0, 30), Magick::CenterGravity, 20, 0, Magick::OverCompositeOp)
+      image = text(40)
+      shadow = image.shadow(0, 0, 30).colorize(1, 1, 1, 0, @theme.inverse_color)
+      @source = @source.composite(shadow, Magick::CenterGravity, 20, 0, Magick::OverCompositeOp)
     end
 
     def save!
-      # img = @image_list.flatten_images
       @source.write(@destination)
     end
   end
