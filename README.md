@@ -1,24 +1,14 @@
 # Profound
 
-TODO: Write a gem description
+Create wallpapers like those on [theprofoundprogrammer](http://theprofoundprogrammer.com) even if you're aweful at Photoshop.
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'profound'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install profound
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ profound path/to/source.jpg "Complain about something" path/to/destination.jpg
 
 ## Contributing
 
