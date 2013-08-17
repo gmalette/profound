@@ -1,6 +1,12 @@
+require 'rmagick'
+require 'google-search'
+require 'net/http'
+require 'uri'
+require 'tempfile'
+
 require 'profound/version'
 require 'profound/filters/toy_camera'
-require 'rmagick'
+
 
 module Profound
   class Theme
@@ -17,10 +23,57 @@ module Profound
     end
   end
 
+  class Input
+    class EmptyQueryResult < RuntimeError; end
+
+    Keywords = [
+      'forest', 'jungle', 'prairie', 'fields', 'flowers' 'beach', 'city', 'skyline',
+      'trail', 'lake', 'sky', 'sunrise', 'dawn', 'dusk', 'scenery', 'island', 'kitten', 'horse', 'puppy'
+    ]
+
+    Qualifiers = [
+      'beautiful', 'gorgeous', 'magnificient', 'superb', nil
+    ]
+
+    def initialize(source, options = {})
+      @source = source || [Qualifiers.sample, Keywords.sample].join(" ")
+      @options = options
+    end
+
+    def path
+      File.exists?(@source) ? @source : download
+    end
+
+    def download
+      image = search
+
+      response = Net::HTTP.get_response(URI.parse(image.uri))
+
+      tmp = Tempfile.new("profound")
+      tmp.write(response.body)
+      tmp.rewind
+      tmp.path
+    end
+
+    def search
+      query = [@source, [@options[:width], @options[:height]].compact.join("x")].join(" ")
+      image = Google::Search::Image.new(:query => query, :image_size => :huge, :file_type => :jpg).select{ |img|
+        (@options[:width].nil? || @options[:width].to_s == img.width.to_s) &&
+        (@options[:height].nil? || @options[:height].to_s == img.height.to_s)
+      }.sample
+
+      raise EmptyQueryResult, "Could not find images matching #{query}" unless image
+
+      image
+    end
+  end
+
   class Image
     include Profound::Filters::ToyCamera
 
     def initialize(source, caption, options, destination)
+      source        = Input.new(source, options).path
+
       @source       = Magick::ImageList.new(source).first
       @target       = Magick::ImageList.new
       @destination  = destination

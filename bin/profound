@@ -5,9 +5,12 @@ require File.expand_path('../../lib/profound', __FILE__)
 
 
 options = {
-  :theme => :light
+  :theme  => :light,
+  :width  => 1920,
+  :height => 1200
 }
-source, caption, destination = OptionParser.new do |opts|
+
+parser = OptionParser.new do |opts|
   opts.banner = 'Usage: profound [options] source "Caption or label" destination'
   opts.separator ""
   opts.separator "Specific options:"
@@ -20,10 +23,22 @@ source, caption, destination = OptionParser.new do |opts|
     options[:filter] = filter.to_sym
   end
 
-end.parse!
+  opts.on("--search-size=WIDTHxHEIGHT") do |size|
+    sizes = size.split("x")
+    options[:width]   = sizes[0]
+    options[:height]  = sizes[1]
+  end
 
-unless ARGV.length == 3
-  puts Choice.help
+end
+
+parser.parse!
+
+if (2..3) === ARGV.length
+  source, caption, destination = (ARGV.length == 3 ? ARGV : [nil, *ARGV])
+end
+
+unless caption && destination
+  puts parser.to_s
   exit(1)
 end
 
