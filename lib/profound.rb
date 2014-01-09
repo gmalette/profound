@@ -80,6 +80,7 @@ module Profound
       @caption      = caption
       @options      = options
       @theme        = Theme.new(options[:theme])
+      @font_family  = options[:font_family] || 'Helvetica'
     end
 
     def convert
@@ -117,9 +118,11 @@ module Profound
       text = Magick::Draw.new
 
       color = @theme.color
+      font_family = @font_family
+
       text.annotate(image, 0, 0, 0, 0, @caption) {
         self.fill         = color
-        self.font_family  = 'Arial'
+        self.font_family  = font_family
         self.pointsize    = 80
         self.stroke_width = stroke_width
         self.stroke       = color
@@ -127,6 +130,9 @@ module Profound
       }
 
       image
+    rescue Magick::ImageMagickError => e
+      puts "An error has occured. Try installing ghostscript"
+      exit!
     end
   end
 end

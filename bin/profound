@@ -29,6 +29,9 @@ parser = OptionParser.new do |opts|
     options[:height]  = sizes[1]
   end
 
+  opts.on("--font-family=FONT") do |font_family|
+    options[:font_family] = font_family
+  end
 end
 
 parser.parse!
