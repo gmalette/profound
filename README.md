@@ -4,6 +4,7 @@ Create wallpapers like those on [theprofoundprogrammer](http://theprofoundprogra
 
 ## Installation
 
+    $ brew install ghostscript
     $ brew install imagemagick
     $ gem install profound
 
