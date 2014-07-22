@@ -18,7 +18,7 @@ The source can also be a few keywords to help find an image. You also specify th
 
 The source can also be omitted altogether. In that case, `profound` will search for images.
 
-    $ profound "Something ironic", ~/profound-ironic.jpg
+    $ profound "Something ironic" ~/profound-ironic.jpg
 
 ## Contributing
 
