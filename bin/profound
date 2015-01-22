@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require 'pry'
 require 'optparse'
 require File.expand_path('../../lib/profound', __FILE__)
 

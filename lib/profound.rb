@@ -103,7 +103,7 @@ module Profound
 
     def shadow
       image = _text(40)
-      shadow = image.shadow(0, 0, 30).colorize(1, 1, 1, 0, @theme.inverse_color)
+      shadow = image.shadow(0, 0, line_count(@caption) * 30).colorize(1, 1, 1, 0, @theme.inverse_color)
       @source = @source.composite(shadow, Magick::CenterGravity, 20, 0, Magick::OverCompositeOp)
     end
 
@@ -112,7 +112,7 @@ module Profound
     end
 
     def _text(stroke_width = 0)
-      image = Magick::Image.new(@source.columns, 100) {
+      image = Magick::Image.new(@source.columns, line_count(@caption) * 100) {
         self.background_color = 'none'
       }
       text = Magick::Draw.new
@@ -133,6 +133,10 @@ module Profound
     rescue Magick::ImageMagickError => e
       puts "An error has occured. Try installing ghostscript"
       exit!
+    end
+
+    def line_count(caption)
+      caption.split("\\n").count
     end
   end
 end
