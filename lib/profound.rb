@@ -1,11 +1,11 @@
 require 'rmagick'
-require 'google-search'
+require 'fotofetch'
 require 'net/http'
 require 'uri'
 require 'tempfile'
 
-require 'profound/version'
-require 'profound/filters/toy_camera'
+require_relative './profound/version'
+require_relative './profound/filters/toy_camera'
 
 
 module Profound
@@ -45,9 +45,9 @@ module Profound
     end
 
     def download
-      image = search
+      url = search
 
-      response = Net::HTTP.get_response(URI.parse(image.uri))
+      response = Net::HTTP.get_response(URI.parse(url))
 
       tmp = Tempfile.new("profound")
       tmp.write(response.body)
@@ -56,15 +56,12 @@ module Profound
     end
 
     def search
-      query = [@source, [@options[:width], @options[:height]].compact.join("x")].join(" ")
-      image = Google::Search::Image.new(:query => query, :image_size => :huge, :file_type => :jpg).select{ |img|
-        (@options[:width].nil? || @options[:width].to_s == img.width.to_s) &&
-        (@options[:height].nil? || @options[:height].to_s == img.height.to_s)
-      }.sample
+      fetcher = Fotofetch::Fetch.new
+      links = fetcher.fetch_links(@source, 15, @options[:width], @options[:height])
 
-      raise EmptyQueryResult, "Could not find images matching #{query}" unless image
+      raise EmptyQueryResult, "Could not find images matching #{@source.inspect}" if links.empty?
 
-      image
+      links.values.sample
     end
   end
 
